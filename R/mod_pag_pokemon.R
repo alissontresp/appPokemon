@@ -44,13 +44,16 @@ mod_pag_pokemon_ui <- function(id){
       column(
         width = 3,
         bs4Dash::valueBoxOutput(
-          ns("altura1")
+          ns("altura1"),
+          width = 12
         ),
         bs4Dash::valueBoxOutput(
-          ns("peso1")
+          ns("peso1"),
+          width = 12
         ),
         bs4Dash::valueBoxOutput(
-          ns("exp_base1")
+          ns("exp_base1"),
+          width = 12
         )
       ),
       column(
@@ -60,13 +63,16 @@ mod_pag_pokemon_ui <- function(id){
       column(
         width = 3,
         bs4Dash::valueBoxOutput(
-          ns("altura2")
+          ns("altura2"),
+          width = 12
         ),
         bs4Dash::valueBoxOutput(
-          ns("peso2")
+          ns("peso2"),
+          width = 12
         ),
         bs4Dash::valueBoxOutput(
-          ns("exp_base2")
+          ns("exp_base2"),
+          width = 12
         )
       )
     )
@@ -86,6 +92,7 @@ mod_pag_pokemon_server <- function(id, dados){
     )
 
     observe({
+      req(input$pokemon1)
       opcoes <- dados |>
         dplyr::filter(pokemon != input$pokemon1) |>
         dplyr::pull(pokemon)
@@ -130,21 +137,76 @@ mod_pag_pokemon_server <- function(id, dados){
       cor1 <- dados_filtrados1()$cor_1
       cor2 <- dados_filtrados2()$cor_1
 
-      dados_filtrados1() |>
-        dplyr::bind_rows(dados_filtrados2()) |>
+      tab_1 <- dados_filtrados1() |>
         dplyr::select(
-          pokemon, hp:velocidade
+          hp:velocidade
         ) |>
         tidyr::pivot_longer(
-          cols = -pokemon,
+          cols = dplyr::everything(),
           names_to = "stats",
-          values_to = "valor"
+          values_to = "valor1"
+        )
+
+      tab_2 <- dados_filtrados2() |>
+        dplyr::select(
+          hp:velocidade
         ) |>
-        dplyr::group_by(pokemon) |>
+        tidyr::pivot_longer(
+          cols = dplyr::everything(),
+          names_to = "stats",
+          values_to = "valor2"
+        )
+
+      tab_1 |>
+        dplyr::left_join(tab_2, by = "stats") |>
         echarts4r::e_chart(x = stats) |>
-        echarts4r::e_radar(serie = valor) |>
+        echarts4r::e_radar(serie = valor1) |>
+        echarts4r::e_radar(serie = valor2) |>
         echarts4r::e_legend(show = FALSE) |>
         echarts4r::e_color(color = c(cor1, cor2))
+    })
+
+
+    output$altura1 <- bs4Dash::renderbs4ValueBox({
+      valor <- dados_filtrados1() |>
+        dplyr::pull(altura)
+
+      valuebox_altura(valor)
+    })
+
+    output$peso1 <- bs4Dash::renderbs4ValueBox({
+      valor <- dados_filtrados1() |>
+        dplyr::pull(peso)
+
+      valuebox_peso(valor)
+    })
+
+    output$exp_base1 <- bs4Dash::renderbs4ValueBox({
+      valor <- dados_filtrados1() |>
+        dplyr::pull(exp_base)
+
+      valuebox_exp_base(valor)
+    })
+
+    output$altura2 <- bs4Dash::renderbs4ValueBox({
+      valor <- dados_filtrados2() |>
+        dplyr::pull(altura)
+
+      valuebox_altura(valor)
+    })
+
+    output$peso2 <- bs4Dash::renderbs4ValueBox({
+      valor <- dados_filtrados2() |>
+        dplyr::pull(peso)
+
+      valuebox_peso(valor)
+    })
+
+    output$exp_base2 <- bs4Dash::renderbs4ValueBox({
+      valor <- dados_filtrados2() |>
+        dplyr::pull(exp_base)
+
+      valuebox_exp_base(valor)
     })
 
   })

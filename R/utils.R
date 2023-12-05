@@ -12,7 +12,6 @@ criar_url_imagem <- function(tab) {
   )
 }
 
-
 pegar_tipos_pkmn <- function(tab) {
   tab |>
     dplyr::mutate(
@@ -21,4 +20,31 @@ pegar_tipos_pkmn <- function(tab) {
     ) |>
     dplyr::pull(tipos) |>
     stringr::str_to_sentence()
+}
+
+valuebox_altura <- function(x) {
+  bs4Dash::valueBox(
+    value = x,
+    subtitle = "Altura",
+    icon = icon("ruler-vertical"),
+    color = "primary"
+  )
+}
+
+valuebox_peso <- function(x) {
+  bs4Dash::valueBox(
+    value = x,
+    subtitle = "Peso",
+    icon = icon("weight-hanging"),
+    color = "primary"
+  )
+}
+
+valuebox_exp_base <- function(x) {
+  bs4Dash::valueBox(
+    value = x,
+    subtitle = "Experiência base",
+    icon = icon("dumbbell"),
+    color = "primary"
+  )
 }
