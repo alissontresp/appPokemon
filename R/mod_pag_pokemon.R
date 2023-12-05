@@ -79,15 +79,22 @@ mod_pag_pokemon_ui <- function(id){
 mod_pag_pokemon_server <- function(id, dados){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+
     updateSelectInput(
       inputId = "pokemon1",
       choices = dados$pokemon
     )
 
-    updateSelectInput(
-      inputId = "pokemon2",
-      choices = dados$pokemon
-    )
+    observe({
+      opcoes <- dados |>
+        dplyr::filter(pokemon != input$pokemon1) |>
+        dplyr::pull(pokemon)
+
+      updateSelectInput(
+        inputId = "pokemon2",
+        choices = opcoes
+      )
+    })
 
     dados_filtrados1 <- reactive({
       req(input$pokemon1)
@@ -120,20 +127,24 @@ mod_pag_pokemon_server <- function(id, dados){
     })
 
     output$grafico_radar <- echarts4r::renderEcharts4r({
+      cor1 <- dados_filtrados1()$cor_1
+      cor2 <- dados_filtrados2()$cor_1
 
-      cor <- dados_filtrados()$cor_1
-
-      dados_filtrados() |>
-        dplyr::select(hp:velocidade) |>
+      dados_filtrados1() |>
+        dplyr::bind_rows(dados_filtrados2()) |>
+        dplyr::select(
+          pokemon, hp:velocidade
+        ) |>
         tidyr::pivot_longer(
-          cols = dplyr::everything(),
+          cols = -pokemon,
           names_to = "stats",
           values_to = "valor"
         ) |>
+        dplyr::group_by(pokemon) |>
         echarts4r::e_chart(x = stats) |>
         echarts4r::e_radar(serie = valor) |>
         echarts4r::e_legend(show = FALSE) |>
-        echarts4r::e_color(color = cor)
+        echarts4r::e_color(color = c(cor1, cor2))
     })
 
   })
