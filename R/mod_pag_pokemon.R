@@ -43,17 +43,19 @@ mod_pag_pokemon_ui <- function(id){
     fluidRow(
       column(
         width = 3,
-        bs4Dash::valueBoxOutput(
-          ns("altura1"),
-          width = 12
-        ),
-        bs4Dash::valueBoxOutput(
-          ns("peso1"),
-          width = 12
-        ),
-        bs4Dash::valueBoxOutput(
-          ns("exp_base1"),
-          width = 12
+        fluidRow(
+          bs4Dash::valueBoxOutput(
+            ns("altura1"),
+            width = 12
+          ),
+          bs4Dash::valueBoxOutput(
+            ns("peso1"),
+            width = 12
+          ),
+          bs4Dash::valueBoxOutput(
+            ns("exp_base1"),
+            width = 12
+          )
         )
       ),
       column(
@@ -62,17 +64,19 @@ mod_pag_pokemon_ui <- function(id){
       ),
       column(
         width = 3,
-        bs4Dash::valueBoxOutput(
-          ns("altura2"),
-          width = 12
-        ),
-        bs4Dash::valueBoxOutput(
-          ns("peso2"),
-          width = 12
-        ),
-        bs4Dash::valueBoxOutput(
-          ns("exp_base2"),
-          width = 12
+        fluidRow(
+          bs4Dash::valueBoxOutput(
+            ns("altura2"),
+            width = 12
+          ),
+          bs4Dash::valueBoxOutput(
+            ns("peso2"),
+            width = 12
+          ),
+          bs4Dash::valueBoxOutput(
+            ns("exp_base2"),
+            width = 12
+          )
         )
       )
     )

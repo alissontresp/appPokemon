@@ -15,7 +15,7 @@ criar_url_imagem <- function(tab) {
 pegar_tipos_pkmn <- function(tab) {
   tab |>
     dplyr::mutate(
-      tipo_2 = ifelse(is.na(tipo_2), "", tipo_2),
+      # tipo_2 = ifelse(is.na(tipo_2), "", tipo_2),
       tipos = paste(na.omit(c(tipo_1, tipo_2)), collapse = ", ")
     ) |>
     dplyr::pull(tipos) |>
